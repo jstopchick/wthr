@@ -1,0 +1,17 @@
+query {
+  allWeatherStations {
+    nodes {
+      identifier
+      name
+      latitude
+      longitue
+      currentChartData {
+        labels
+        datasets {
+          label
+          data
+        }
+      }
+    }
+  }
+}

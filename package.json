@@ -1,0 +1,47 @@
+{
+  "name": "things",
+  "version": "1.0.0",
+  "author": "Kevin Burkett <https://github.com/stlbucket>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt-ts",
+    "build": "nuxt-ts build",
+    "start": "nuxt-ts start",
+    "generate": "nuxt-ts generate",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@nuxt/content": "^1.9.0",
+    "@nuxt/typescript-runtime": "^2.0.0",
+    "@nuxtjs/apollo": "^4.0.1-rc.4",
+    "chart.js": "^2.9.4",
+    "cookie-universal-nuxt": "^2.1.4",
+    "core-js": "^3.6.5",
+    "graphile-utils": "^4.9.2",
+    "graphql-tag": "^2.11.0",
+    "nuxt": "^2.14.6",
+    "nuxt-buefy": "^0.4.3",
+    "pg": "^8.4.2",
+    "pg-native": "^3.0.0",
+    "postgraphile": "^4.9.2",
+    "postgraphile-plugin-connection-filter": "^2.1.0",
+    "remark-footnotes": "^2.0.0",
+    "rxjs": "^6.6.3",
+    "vue-chartjs": "^3.5.1",
+    "vuex-persist": "^3.1.3"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.14.6",
+    "@nuxt/typescript-build": "^2.0.3",
+    "@vue/test-utils": "^1.1.0",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^26.5.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.5.0",
+    "prettier": "^2.1.2",
+    "ts-jest": "^26.4.1",
+    "vue-jest": "^3.0.4"
+  }
+}
