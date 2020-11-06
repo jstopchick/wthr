@@ -2,7 +2,11 @@
   <section v-if="station">
     <h1>Weather Station Identifier: {{ station.identifier }}</h1>
     <div class="small">
-      <line-chart :chart-data="station.currentChartData" :refresh="refresh"></line-chart>
+      <line-chart
+      :chart-options="chartOptions"
+      :chart-data="station.currentChartData"
+      :refresh="refresh"
+    ></line-chart>
     </div>
   </section>
 </template>
@@ -26,6 +30,15 @@
     },
     data () {
       return {
+        chartOptions: {
+          animation: {
+              duration: 0 // general animation time
+          },
+          hover: {
+              animationDuration: 0 // duration of animations when hovering an item
+          },
+          responsiveAnimationDuration: 0 // animation duration after a resize
+        }
       }
     },
     mounted () {

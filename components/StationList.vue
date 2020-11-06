@@ -18,6 +18,7 @@
 <script>
 import allStations from '../graphql/query/allStations.graphql'
 import StationChart from './StationChart'
+import {interval} from 'rxjs'
 
 export default {
   components: {
@@ -34,7 +35,8 @@ export default {
         { field: "longitude", label: "longitude" },
       ],
       intervalFn: null,
-      refresh: false
+      refresh: false,
+      timer: null
     }
   },
   computed: {
@@ -56,9 +58,9 @@ export default {
     }
   },
   mounted () {
-    this.intervalFn = setInterval(function(){
-      this.$apollo.queries.init.refetch()
-    }.bind(this), 3000);
+    this.timer = interval(1000);
+
+    this.timer.subscribe(() => this.$apollo.queries.init.refetch())
   }
 }
 </script>

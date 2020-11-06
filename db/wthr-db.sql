@@ -183,6 +183,8 @@ $$;
 -- to support some rich and fast charting features
 create type wthr.line_chart_dataset as (
   label text,
+  fill boolean,
+  border_color text,
   data text[]
 );
 create type wthr.line_chart_data as (
@@ -205,6 +207,12 @@ DECLARE
 BEGIN
   _temperature_dataset.label := 'temperature';
   _humidity_dataset.label := 'humidity';
+
+  _temperature_dataset.fill := false;
+  _humidity_dataset.fill := false;
+
+  _temperature_dataset.border_color := '#f87979';
+  _humidity_dataset.border_color := '#3482cd';
 
   for _reading in
     SELECT *
