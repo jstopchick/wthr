@@ -107,7 +107,7 @@ create table wthr.station (
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     name text,
     latitude text,
-    longitue text
+    longitude text
 );
 
 
@@ -142,7 +142,7 @@ BEGIN
     identifier
     ,name
     ,latitude
-    ,longitue
+    ,longitude
   )
   values (
     _station_info.identifier

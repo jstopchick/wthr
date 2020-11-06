@@ -4,7 +4,7 @@ query {
       identifier
       name
       latitude
-      longitue
+      longitude
       currentChartData {
         labels
         datasets {

@@ -31,7 +31,7 @@ export default {
         { field: "identifier", label: "identifier" },
         { field: "name", label: "name" },
         { field: "latitude", label: "latitude" },
-        { field: "longitue", label: "longitue" },
+        { field: "longitude", label: "longitude" },
       ],
       intervalFn: null,
       refresh: false
