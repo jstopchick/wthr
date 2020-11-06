@@ -190,8 +190,8 @@ RETURNS wthr.line_chart_data
     LANGUAGE plpgsql stable
     AS $$
 DECLARE
-  _line_chart_data wthr.line_chart_data;
   _reading wthr.reading;
+  _line_chart_data wthr.line_chart_data;
   _temperature_dataset wthr.line_chart_dataset;
   _humidity_dataset wthr.line_chart_dataset;
 BEGIN
