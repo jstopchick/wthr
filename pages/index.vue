@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <WeatherStationList />
+    <StationList />
   </section>
 </template>
 

@@ -1,8 +1,8 @@
 <template>
-  <section v-if="weatherStation">
-    <h1>Weather Station Identifier: {{ weatherStation.identifier }}</h1>
+  <section v-if="station">
+    <h1>Weather Station Identifier: {{ station.identifier }}</h1>
     <div class="small">
-      <line-chart :chart-data="weatherStation.currentChartData" :refresh="refresh"></line-chart>
+      <line-chart :chart-data="station.currentChartData" :refresh="refresh"></line-chart>
     </div>
   </section>
 </template>
@@ -15,7 +15,7 @@
       LineChart
     },
     props: {
-      weatherStation: {
+      station: {
         type: Object,
         default: null
       },
@@ -34,7 +34,7 @@
     },
     watch: {
       refresh () {
-        console.log('refresh', this.weatherStation ? this.weatherStation.currentChartData.labels.slice(-1) : '')
+        console.log('refresh', this.station ? this.station.currentChartData.labels.slice(-1) : '')
       }
     }
   }

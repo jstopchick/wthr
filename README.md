@@ -1,6 +1,17 @@
-# things
+# wthr
+this is a bare-bones demo of nuxt and postgraphile configuration in the context of a very basic IOT scenario.
+## major components
+- https://www.postgresql.org/
+- https://www.graphile.org/postgraphile/
+- https://nuxtjs.org/
+- https://apollo.vuejs.org/
+- https://vue-chartjs.org/
 
-## Build Setup
+## database set
+- create *wthr* database on your postgres server
+- 
+
+## build betup
 
 ```bash
 # install dependencies
@@ -17,4 +28,25 @@ $ yarn start
 $ yarn generate
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+For detailed explanation on how wthr work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+# GraphQL query
+```
+query {
+  allStations {
+    nodes {
+      identifier
+      name
+      latitude
+      longitue
+      currentChartData {
+        labels
+        datasets {
+          label
+          data
+        }
+      }
+    }
+  }
+}
+```

@@ -1,5 +1,5 @@
 {
-  "name": "things",
+  "name": "wthr",
   "version": "1.0.0",
   "author": "Kevin Burkett <https://github.com/stlbucket>",
   "license": "MIT",
@@ -9,7 +9,9 @@
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
     "generate": "nuxt-ts generate",
-    "test": "jest"
+    "test": "jest",
+    "rebase-db": "node db/rebase-db",
+    "fake-data": "node db/fake-data-maker"
   },
   "dependencies": {
     "@nuxt/content": "^1.9.0",

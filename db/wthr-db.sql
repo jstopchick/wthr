@@ -1,11 +1,9 @@
-\c things_demo
-
 begin;
 create extension if not exists pgcrypto;
-drop schema if exists things cascade;
-create schema things;
-
+drop schema if exists wthr cascade;
 drop schema if exists util_fn cascade;
+
+
 create schema util_fn;
 CREATE FUNCTION util_fn.generate_ulid() RETURNS text
     LANGUAGE plpgsql
@@ -65,7 +63,46 @@ BEGIN
 END
 $$;
 
-create table things.weather_station (
+
+
+
+create schema wthr;
+
+create type wthr.line_chart_dataset as (
+  label text,
+  data text[]
+);
+
+create type wthr.line_chart_data as (
+  labels text[],
+  datasets wthr.line_chart_dataset[]
+);
+
+create type wthr.wind_direction as enum (
+  'N','NNW','NW','WNW','W','WSW','SW','SSW','S','SSE','SE','ESE','E','ENE','NE','NNE'
+);
+
+create type wthr.station_info as (
+  identifier text,
+  name text,
+  latitude text,
+  longitude text
+);
+
+create type wthr.reading_info as (
+  ws_info wthr.station_info,
+  reading_identifier text,
+  reading_timestamp timestamptz,
+  temperature numeric(7,3),
+  humidity numeric(7,3),
+  wind_direction wthr.wind_direction,
+  wind_speed integer
+);
+
+
+
+
+create table wthr.station (
     identifier text not null unique,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     name text,
@@ -73,29 +110,8 @@ create table things.weather_station (
     longitue text
 );
 
-create type things.wind_direction as enum (
-  'N','NNW','NW','WNW','W','WSW','SW','SSW','S','SSE','SE','ESE','E','ENE','NE','NNE'
-);
 
-
-create type things.weather_station_info as (
-  identifier text,
-  name text,
-  latitude text,
-  longitude text
-);
-
-create type things.ws_reading_info as (
-  ws_info things.weather_station_info,
-  reading_identifier text,
-  reading_timestamp timestamptz,
-  temperature numeric(7,3),
-  humidity numeric(7,3),
-  wind_direction things.wind_direction,
-  wind_speed integer
-);
-
-create table things.ws_reading (
+create table wthr.reading (
   id text DEFAULT util_fn.generate_ulid() UNIQUE NOT NULL,
   ws_identifier text NOT NULL,
   reading_identifier text,
@@ -103,42 +119,42 @@ create table things.ws_reading (
   reading_timestamp timestamptz,
   temperature numeric(7,3),
   humidity numeric(7,3),
-  wind_direction things.wind_direction,
+  wind_direction wthr.wind_direction,
   wind_speed integer
 );
-ALTER TABLE ONLY things.ws_reading
-    ADD CONSTRAINT pk_ws_reading PRIMARY KEY (id);
-ALTER TABLE ONLY things.ws_reading
-    ADD CONSTRAINT uq_ws_reading UNIQUE (ws_identifier, reading_identifier);
-ALTER TABLE ONLY things.ws_reading
-    ADD CONSTRAINT fk_ws_reading_thing FOREIGN KEY (ws_identifier) REFERENCES things.weather_station (identifier);
+ALTER TABLE ONLY wthr.reading
+    ADD CONSTRAINT pk_reading PRIMARY KEY (id);
+ALTER TABLE ONLY wthr.reading
+    ADD CONSTRAINT uq_reading UNIQUE (ws_identifier, reading_identifier);
+ALTER TABLE ONLY wthr.reading
+    ADD CONSTRAINT fk_reading_thing FOREIGN KEY (ws_identifier) REFERENCES wthr.station (identifier);
 
 
-CREATE FUNCTION things.capture_reading(_ws_reading_info things.ws_reading_info) RETURNS things.ws_reading
+CREATE FUNCTION wthr.capture_reading(_reading_info wthr.reading_info) RETURNS wthr.reading
     LANGUAGE plpgsql
     AS $$
 DECLARE
-  _weather_station_info things.weather_station_info;
-  _reading things.ws_reading;
+  _station_info wthr.station_info;
+  _reading wthr.reading;
 BEGIN
-  _weather_station_info := _ws_reading_info.ws_info::things.weather_station_info;
-  insert into things.weather_station(
+  _station_info := _reading_info.ws_info::wthr.station_info;
+  insert into wthr.station(
     identifier
     ,name
     ,latitude
     ,longitue
   )
   values (
-    _weather_station_info.identifier
-    ,_weather_station_info.name
-    ,_weather_station_info.latitude
-    ,_weather_station_info.longitude
+    _station_info.identifier
+    ,_station_info.name
+    ,_station_info.latitude
+    ,_station_info.longitude
   )
   on conflict (identifier)
   do nothing
   ;
 
-  insert into things.ws_reading(
+  insert into wthr.reading(
     ws_identifier
     ,reading_identifier
     ,reading_timestamp
@@ -148,13 +164,13 @@ BEGIN
     ,wind_speed
   )
   values (
-    _weather_station_info.identifier::text
-    ,_ws_reading_info.reading_identifier::text
-    ,_ws_reading_info.reading_timestamp::timestamptz
-    ,_ws_reading_info.temperature::numeric(20,3)
-    ,_ws_reading_info.humidity::numeric(20,3)
-    ,_ws_reading_info.wind_direction::things.wind_direction
-    ,_ws_reading_info.wind_speed::integer
+    _station_info.identifier::text
+    ,_reading_info.reading_identifier::text
+    ,_reading_info.reading_timestamp::timestamptz
+    ,_reading_info.temperature::numeric(20,3)
+    ,_reading_info.humidity::numeric(20,3)
+    ,_reading_info.wind_direction::wthr.wind_direction
+    ,_reading_info.wind_speed::integer
   )
   on conflict (ws_identifier, reading_identifier)
   do nothing
@@ -165,8 +181,43 @@ BEGIN
 END
 $$;
 
-grant select on things.weather_station to public;
-grant select on things.ws_reading to public;
+
+
+CREATE FUNCTION wthr.station_current_chart_data(_station wthr.station)
+RETURNS wthr.line_chart_data
+    LANGUAGE plpgsql stable
+    AS $$
+DECLARE
+  _line_chart_data wthr.line_chart_data;
+  _reading wthr.reading;
+  _temperature_datasets wthr.line_chart_dataset;
+BEGIN
+  _temperature_datasets.label := 'temperature';
+
+  for _reading in
+    SELECT *
+    FROM (
+      select *
+      from wthr.reading
+      where ws_identifier = _station.identifier
+      order by reading_timestamp desc
+      limit 100
+    ) r
+    order by reading_timestamp asc
+  loop
+    _line_chart_data.labels := array_append(_line_chart_data.labels, to_char(_reading.reading_timestamp, 'HH24:MI:SS'));
+    _temperature_datasets.data := array_append(_temperature_datasets.data, _reading.temperature::text);
+  end loop;
+
+  _line_chart_data.datasets := array_append(_line_chart_data.datasets, _temperature_datasets);
+
+  RETURN _line_chart_data;
+END
+$$;
+
+
+grant select on wthr.station to public;
+grant select on wthr.reading to public;
 
 commit;
 

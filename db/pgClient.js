@@ -1,21 +1,16 @@
+const config = require('./config')
 const { Pool } = require('pg')
 
 let pool
 
-const initPool = async() => {
-  const connectionString = 'postgres://postgres:1234@0.0.0.0/things_demo'
-
-  if (!connectionString) throw new Error('config.connectionString required')
-
-  pool = new Pool({
-    connectionString: connectionString,
-  })
+const initPool = async(connectionConfig) => {
+  if (pool) return
+  pool = new Pool(connectionConfig || config.connectionConfig)
 }
 
-
-const doQuery = async (sql, params) => {
+const doQuery = async (sql, params, connectionConfig) => {
   let client
-  await initPool()
+  await initPool(connectionConfig)
   try {
     client = await pool.connect()
     const result = await client.query(sql,params)

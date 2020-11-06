@@ -1,32 +1,32 @@
 <template>
   <section>
     <b-table
-      :data="weatherStations"
+      :data="stations"
       :columns="columns"
-      :selected.sync="selectedWeatherStation"
+      :selected.sync="selectedStation"
       focusable
     >
     </b-table>
-    <weather-station-chart
-      :weather-station="selectedWeatherStation"
+    <station-chart
+      :station="selectedStation"
       :refresh="refresh"
     >
-    </weather-station-chart>
+    </station-chart>
   </section>
 </template>
 
 <script>
-import allWeatherStations from '../graphql/query/allWeatherStations.graphql'
-import WeatherStationChart from './WeatherStationChart'
+import allStations from '../graphql/query/allStations.graphql'
+import StationChart from './StationChart'
 
 export default {
   components: {
-    WeatherStationChart
+    StationChart
   },
   data () {
     return {
-      weatherStations: [],
-      selectedWeatherStation: null,
+      stations: [],
+      selectedStation: null,
       columns: [
         { field: "identifier", label: "identifier" },
         { field: "name", label: "name" },
@@ -38,22 +38,19 @@ export default {
     }
   },
   computed: {
-    weatherStationIdentifier () {
-      return this.selectedWeatherStation ? this.selectedWeatherStation.identifier : null
-    }
   },
   watch: {
-    selectedWeatherStation () {
+    selectedStation () {
       this.refresh = !this.refresh
     }
   },
   apollo: {
     init: {
-      query: allWeatherStations,
+      query: allStations,
       fetchPolicy: 'network-only',
       update (data) {
-        this.weatherStations = data.allWeatherStations.nodes
-        this.selectedWeatherStation = this.selectedWeatherStation ? this.weatherStations.find(ws => ws.identifier === this.selectedWeatherStation.identifier) : null
+        this.stations = data.allStations.nodes
+        this.selectedStation = this.selectedStation ? this.stations.find(ws => ws.identifier === this.selectedStation.identifier) : null
         this.refresh = !this.refresh
       }
     }

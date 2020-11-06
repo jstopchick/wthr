@@ -1,5 +1,5 @@
 query {
-  allWeatherStations {
+  allStations {
     nodes {
       identifier
       name
