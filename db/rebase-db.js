@@ -1,4 +1,4 @@
-const config = require('./config')
+const config = require('../config')
 const pgClient = require ('./pgClient')
 const fs = require('fs')
 

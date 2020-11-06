@@ -1,7 +1,8 @@
+const config = require('../config')
 const { postgraphile } = require("postgraphile");
 
 export default postgraphile(
-  "postgres://postgres:1234@0.0.0.0/wthr",
+  config.connectionConfig,
   ['wthr'],
   {
     watchPg: true,

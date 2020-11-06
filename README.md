@@ -1,5 +1,5 @@
 # wthr
-this is a bare-bones demo of nuxt and postgraphile configuration in the context of a very basic IOT scenario.
+this is a bare-bones, no security or configuration, demo of nuxt-postgraphile setup in the context of a basic IOT scenario; capturing and analyzing weather station readings.
 ## db schema
 ![wthr schema](db/wthr.png)
 ## tldr video
@@ -11,7 +11,7 @@ https://www.youtube.com/watch?v=exrHwvlsAk8
 - https://apollo.vuejs.org/
 - https://vue-chartjs.org/
 ## to run the demo
-first, edit the *db/config* file to reflect your environment:
+first, edit the *config.js* file to reflect your environment:
 ```
 module.exports = {
   dbSuperUserConnectionConfig: {   // used to rebase the db
