@@ -1,16 +1,15 @@
 # wthr
 this is a bare-bones demo of nuxt and postgraphile configuration in the context of a very basic IOT scenario.
-
+## db schema
+![wthr schema](db/wthr.png)
 ## tldr video
 https://www.youtube.com/watch?v=exrHwvlsAk8&feature=youtu.be
-
 ## major components
 - https://www.postgresql.org/
 - https://www.graphile.org/postgraphile/
 - https://nuxtjs.org/
 - https://apollo.vuejs.org/
 - https://vue-chartjs.org/
-
 ## to run the demo
 first, edit the *db/config* file to reflect your environment:
 ```
@@ -43,5 +42,3 @@ $ yarn fake-data
 ```
 in browser, you will now see a list of station.  selecting one will show you a graph of the collected readings
 
-## db schema
-![wthr schema](db/wthr.png)
