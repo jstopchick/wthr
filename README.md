@@ -1,5 +1,6 @@
 # wthr
 this is a bare-bones demo of nuxt and postgraphile configuration in the context of a very basic IOT scenario.
+
 ## major components
 - https://www.postgresql.org/
 - https://www.graphile.org/postgraphile/
@@ -7,46 +8,34 @@ this is a bare-bones demo of nuxt and postgraphile configuration in the context 
 - https://apollo.vuejs.org/
 - https://vue-chartjs.org/
 
-## database set
-- create *wthr* database on your postgres server
-- 
-
-## build betup
-
+## to run the demo
+first, edit the *db/config* file to reflect your environment:
+```
+module.exports = {
+  dbSuperUserConnectionConfig: {   // used to rebase the db
+    connectionString: 'postgres://postgres:1234@0.0.0.0:5432/template1'
+  },
+  connectionConfig: {  // db connection for the app
+    connectionString: 'postgres://postgres:1234@0.0.0.0:5432/wthr'
+  }
+}
+```
+then:
 ```bash
 # install dependencies
 $ yarn install
 
+# build the database
+$ yarn rebase-db
+
 # serve with hot reload at localhost:3000
 $ yarn dev
-
-# build for production and launch server
-$ yarn build
-$ yarn start
-
-# generate static project
-$ yarn generate
 ```
+nav to http://localhost:3000.  you should see an empty screen.
 
-For detailed explanation on how wthr work, check out [Nuxt.js docs](https://nuxtjs.org).
-
-# GraphQL query
+in a second terminal:
+```bash
+# start the fake-data-maker
+$ yarn fake-data
 ```
-query {
-  allStations {
-    nodes {
-      identifier
-      name
-      latitude
-      longitue
-      currentChartData {
-        labels
-        datasets {
-          label
-          data
-        }
-      }
-    }
-  }
-}
-```
+in browser, you will now see a list of station.  selecting one will show you a graph of the collected readings

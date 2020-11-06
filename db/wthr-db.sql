@@ -113,7 +113,7 @@ create table wthr.station (
 
 create table wthr.reading (
   id text DEFAULT util_fn.generate_ulid() UNIQUE NOT NULL,
-  ws_identifier text NOT NULL,
+  station_identifier text NOT NULL,
   reading_identifier text,
   captured_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
   reading_timestamp timestamptz,
@@ -125,9 +125,9 @@ create table wthr.reading (
 ALTER TABLE ONLY wthr.reading
     ADD CONSTRAINT pk_reading PRIMARY KEY (id);
 ALTER TABLE ONLY wthr.reading
-    ADD CONSTRAINT uq_reading UNIQUE (ws_identifier, reading_identifier);
+    ADD CONSTRAINT uq_reading UNIQUE (station_identifier, reading_identifier);
 ALTER TABLE ONLY wthr.reading
-    ADD CONSTRAINT fk_reading_thing FOREIGN KEY (ws_identifier) REFERENCES wthr.station (identifier);
+    ADD CONSTRAINT fk_reading_thing FOREIGN KEY (station_identifier) REFERENCES wthr.station (identifier);
 
 
 CREATE FUNCTION wthr.capture_reading(_reading_info wthr.reading_info) RETURNS wthr.reading
@@ -155,7 +155,7 @@ BEGIN
   ;
 
   insert into wthr.reading(
-    ws_identifier
+    station_identifier
     ,reading_identifier
     ,reading_timestamp
     ,temperature
@@ -172,7 +172,7 @@ BEGIN
     ,_reading_info.wind_direction::wthr.wind_direction
     ,_reading_info.wind_speed::integer
   )
-  on conflict (ws_identifier, reading_identifier)
+  on conflict (station_identifier, reading_identifier)
   do nothing
   returning *
   into _reading;
@@ -199,7 +199,7 @@ BEGIN
     FROM (
       select *
       from wthr.reading
-      where ws_identifier = _station.identifier
+      where station_identifier = _station.identifier
       order by reading_timestamp desc
       limit 100
     ) r
