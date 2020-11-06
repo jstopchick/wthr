@@ -3,7 +3,7 @@ create extension if not exists pgcrypto;
 drop schema if exists wthr cascade;
 drop schema if exists util_fn cascade;
 
-
+-- just an id generator heisted from somewhere
 create schema util_fn;
 CREATE FUNCTION util_fn.generate_ulid() RETURNS text
     LANGUAGE plpgsql
@@ -67,12 +67,13 @@ $$;
 
 
 create schema wthr;
+-- user defined types
 
+-- https://www.chartjs.org/docs/latest/charts/line.html
 create type wthr.line_chart_dataset as (
   label text,
   data text[]
 );
-
 create type wthr.line_chart_data as (
   labels text[],
   datasets wthr.line_chart_dataset[]
@@ -90,7 +91,7 @@ create type wthr.station_info as (
 );
 
 create type wthr.reading_info as (
-  ws_info wthr.station_info,
+  station_info wthr.station_info,
   reading_identifier text,
   reading_timestamp timestamptz,
   temperature numeric(7,3),
@@ -101,7 +102,7 @@ create type wthr.reading_info as (
 
 
 
-
+-- tables
 create table wthr.station (
     identifier text not null unique,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -109,7 +110,6 @@ create table wthr.station (
     latitude text,
     longitude text
 );
-
 
 create table wthr.reading (
   id text DEFAULT util_fn.generate_ulid() UNIQUE NOT NULL,
@@ -129,7 +129,9 @@ ALTER TABLE ONLY wthr.reading
 ALTER TABLE ONLY wthr.reading
     ADD CONSTRAINT fk_reading_thing FOREIGN KEY (station_identifier) REFERENCES wthr.station (identifier);
 
-
+-- functions
+-- fake-data-maker uses this function directly
+-- it is also published as a mutation on the graphql schema
 CREATE FUNCTION wthr.capture_reading(_reading_info wthr.reading_info) RETURNS wthr.reading
     LANGUAGE plpgsql
     AS $$
@@ -137,7 +139,7 @@ DECLARE
   _station_info wthr.station_info;
   _reading wthr.reading;
 BEGIN
-  _station_info := _reading_info.ws_info::wthr.station_info;
+  _station_info := _reading_info.station_info::wthr.station_info;
   insert into wthr.station(
     identifier
     ,name
@@ -181,8 +183,9 @@ BEGIN
 END
 $$;
 
-
-
+-- this will become a computed column in the graphql schema
+-- see the query in:  graphql/query/allStations.graphql
+-- currentChartData is a child of station
 CREATE FUNCTION wthr.station_current_chart_data(_station wthr.station)
 RETURNS wthr.line_chart_data
     LANGUAGE plpgsql stable
