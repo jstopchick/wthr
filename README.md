@@ -3,7 +3,7 @@ this is a bare-bones demo of nuxt and postgraphile configuration in the context 
 ## db schema
 ![wthr schema](db/wthr.png)
 ## tldr video
-https://www.youtube.com/watch?v=exrHwvlsAk8&feature=youtu.be
+https://www.youtube.com/watch?v=exrHwvlsAk8
 ## major components
 - https://www.postgresql.org/
 - https://www.graphile.org/postgraphile/
