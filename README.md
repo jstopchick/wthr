@@ -1,7 +1,7 @@
 # wthr
 this is a bare-bones demo of nuxt and postgraphile configuration in the context of a very basic IOT scenario.
 
-## tldr low-quality video
+## tldr video
 https://www.youtube.com/watch?v=exrHwvlsAk8&feature=youtu.be
 
 ## major components
