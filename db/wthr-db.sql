@@ -3,7 +3,6 @@ create extension if not exists pgcrypto;
 drop schema if exists wthr cascade;
 drop schema if exists util_fn cascade;
 
--- just an id generator heisted from somewhere
 create schema util_fn;
 CREATE FUNCTION util_fn.generate_ulid() RETURNS text
     LANGUAGE plpgsql
