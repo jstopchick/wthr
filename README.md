@@ -33,7 +33,8 @@ $ yarn rebase-db
 # serve with hot reload at localhost:3000
 $ yarn dev
 ```
-navigating to http://localhost:3000, you should see an empty screen.
+at http://localhost:3000 you should see an empty screen.
+at http://localhost:3000/graphiql you can query the api and browse the published schema via docs
 ## create some fake data
 in a second terminal:
 ```bash

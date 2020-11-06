@@ -68,16 +68,6 @@ $$;
 create schema wthr;
 -- user defined types
 
--- https://www.chartjs.org/docs/latest/charts/line.html
-create type wthr.line_chart_dataset as (
-  label text,
-  data text[]
-);
-create type wthr.line_chart_data as (
-  labels text[],
-  datasets wthr.line_chart_dataset[]
-);
-
 create type wthr.wind_direction as enum (
   'N','NNW','NW','WNW','W','WSW','SW','SSW','S','SSE','SE','ESE','E','ENE','NE','NNE'
 );
@@ -181,6 +171,24 @@ BEGIN
   RETURN _reading;
 END
 $$;
+
+
+-- charting stuff
+
+-- https://www.chartjs.org/docs/latest/charts/line.html
+-- these two interfaces are used to allow us to query directly
+-- into the chart data so there is no mapping required in the ui
+-- might not be desired in all situation, but you could
+-- theoretically implement all the types from a given library (chart.js, highcharts.js, etc)
+-- to support some rich and fast charting features
+create type wthr.line_chart_dataset as (
+  label text,
+  data text[]
+);
+create type wthr.line_chart_data as (
+  labels text[],
+  datasets wthr.line_chart_dataset[]
+);
 
 -- this will become a computed column in the graphql schema
 -- see the query in:  graphql/query/allStations.graphql
