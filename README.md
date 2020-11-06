@@ -27,18 +27,17 @@ then:
 # install dependencies
 $ yarn install
 
-# build the database
+# build the database - uses dbSuperUserConnectionConfig from config
 $ yarn rebase-db
 
 # serve with hot reload at localhost:3000
 $ yarn dev
 ```
-nav to http://localhost:3000.  you should see an empty screen.
-
+navigating to http://localhost:3000, you should see an empty screen.
+## create some fake data
 in a second terminal:
 ```bash
 # start the fake-data-maker
 $ yarn fake-data
 ```
-in browser, you will now see a list of station.  selecting one will show you a graph of the collected readings
-
+in browser, you will now see a list of stations. selecting one will show you a graph of the collected readings
