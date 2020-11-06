@@ -39,3 +39,5 @@ in a second terminal:
 $ yarn fake-data
 ```
 in browser, you will now see a list of station.  selecting one will show you a graph of the collected readings
+
+![wthr schema](/db/wthr.png)
