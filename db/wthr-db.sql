@@ -190,9 +190,11 @@ RETURNS wthr.line_chart_data
 DECLARE
   _line_chart_data wthr.line_chart_data;
   _reading wthr.reading;
-  _temperature_datasets wthr.line_chart_dataset;
+  _temperature_dataset wthr.line_chart_dataset;
+  _humidity_dataset wthr.line_chart_dataset;
 BEGIN
-  _temperature_datasets.label := 'temperature';
+  _temperature_dataset.label := 'temperature';
+  _humidity_dataset.label := 'humidity';
 
   for _reading in
     SELECT *
@@ -206,10 +208,13 @@ BEGIN
     order by reading_timestamp asc
   loop
     _line_chart_data.labels := array_append(_line_chart_data.labels, to_char(_reading.reading_timestamp, 'HH24:MI:SS'));
-    _temperature_datasets.data := array_append(_temperature_datasets.data, _reading.temperature::text);
+    _temperature_dataset.data := array_append(_temperature_dataset.data, _reading.temperature::text);
+    _humidity_dataset.data := array_append(_humidity_dataset.data, _reading.humidity::text);
+
   end loop;
 
-  _line_chart_data.datasets := array_append(_line_chart_data.datasets, _temperature_datasets);
+  _line_chart_data.datasets := array_append(_line_chart_data.datasets, _temperature_dataset);
+  _line_chart_data.datasets := array_append(_line_chart_data.datasets, _humidity_dataset);
 
   RETURN _line_chart_data;
 END

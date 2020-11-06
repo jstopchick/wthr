@@ -26,8 +26,8 @@ select wthr.capture_reading((
   ),
   null,
   now(),
-  random() * 10 + 40,
-  random() * 6 + 26,
+  random() * 3 + 40,
+  random() * 4 + 27,
   (SELECT wd FROM unnest(enum_range(NULL::wthr.wind_direction)) wd ORDER BY random() LIMIT 1),
   random() * 20 + 10
   )::wthr.reading_info);

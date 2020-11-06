@@ -40,4 +40,5 @@ $ yarn fake-data
 ```
 in browser, you will now see a list of station.  selecting one will show you a graph of the collected readings
 
+## db schema
 ![wthr schema](db/wthr.png)

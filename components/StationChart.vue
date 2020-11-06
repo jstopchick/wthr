@@ -33,9 +33,9 @@
     methods: {
     },
     watch: {
-      refresh () {
-        console.log('refresh', this.station ? this.station.currentChartData.labels.slice(-1) : '')
-      }
+      // refresh () {
+      //   console.log('refresh', this.station ? this.station.currentChartData.labels.slice(-1) : '')
+      // }
     }
   }
 </script>
